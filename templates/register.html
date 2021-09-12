@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+{% block main %}
+<form action="/register" method="post">
+    <div class="form-group">
+        <input autocomplete="off" class="form-control" name="username" placeholder="Username" type="text">
+    </div>
+    <div class="form-group">
+        <input autocomplete="off" class="form-control" name="email" placeholder="Email" type="email">
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="password" placeholder="Password" type="password">
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="passwordconf" placeholder="Password(Again)" type="password">
+    </div>
+    <button class="buttonhide navbarb" type="submit">Register</button>
+</form>
+{% endblock %}
