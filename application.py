@@ -23,15 +23,15 @@ Session(app)
 db = SQL("sqlite:///store.db")
 
 #config to send emails
-#app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
-#app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
-#app.config["MAIL_PORT"] = 587
-#app.config["MAIL_SERVER"] = "smtp.gmail.com"
-#app.config["MAIL_USE_TLS"] = True
-#app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
-#app.config['MAIL_USE_SSL'] = False
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_USE_SSL"] = True
 
-#mail = Mail(app)
+mail = Mail(app)
 
 @app.after_request
 def after_request(response):
@@ -112,8 +112,8 @@ def register():
             return render_template("error.html",problem="Email already in use")
         else:
             db.execute("INSERT INTO users(username, hash, email) VALUES(?, ?, ?)",request.form.get("username"),generate_password_hash(request.form.get("password")), request.form.get("email"))
-            #message = Message("You are registered!", recipients=[request.form.get("email")])
-            #mail.send(message)
+            message = Message("You are registered!", recipients=[request.form.get("email")])
+            mail.send(message)
             return redirect("/login")
     else:
         return render_template("register.html")
@@ -125,14 +125,25 @@ def cart():
     if request.method == "GET":
         user_id = session.get("user_id")
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ?", user_id)
+        total = None
         return render_template("cart.html", produtos=produtos)
     
     if request.method == "POST":
         user_id = session.get("user_id")
         id = request.form.get("id")
         quantity = request.form.get("quantity")
-        if quantity != None:
+        if quantity != None or db.execute("SELECT * FROM checkoutproduct WHERE user_id = ? AND product_id = ?",user_id, id) != []:
             product = db.execute("SELECT * FROM produtos WHERE id = ?", id)
+            if quantity == '0':
+                db.execute("DELETE FROM checkoutproduct WHERE user_id = ? AND product_id = ?", user_id, id)
+                return redirect("/cart")
+            if quantity == None:
+                unupdate_product = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ? AND product_id = ?",user_id, id)
+                quantity = unupdate_product[0]['product_quantity']
+                quantity = quantity+1
+                db.execute("UPDATE checkoutproduct SET product_quantity = ? WHERE user_id = ? AND product_id = ?",quantity, user_id, id)
+                db.execute("UPDATE checkoutproduct SET total_payment = ? WHERE product_quantity = ? AND user_id = ? AND product_id = ?", (float(quantity)*float(product[0]['price'])), quantity, user_id, id)
+                return redirect("/cart")
             db.execute("UPDATE checkoutproduct SET product_quantity = ? WHERE user_id = ? AND product_id = ?",quantity, user_id, id)
             db.execute("UPDATE checkoutproduct SET total_payment = ? WHERE product_quantity = ? AND user_id = ? AND product_id = ?", (float(quantity)*float(product[0]['price'])), quantity, user_id, id)
             return redirect("/cart")

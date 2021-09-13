@@ -148,3 +148,25 @@ input[type="text"], input[type="password"], input[type="email"], input[type=numb
 {
     margin-bottom: 3rem;
 }
+.checkout_button
+{
+    background-color: #000;
+    color: rgb(130, 10, 209);;
+    border: 1px solid;
+    border-radius: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 450;
+    line-height: 1.5;
+    padding: 0.375rem 0.75rem;
+    text-align: center;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    vertical-align: middle;
+    margin-top: 0.175rem;
+    border-color:rgb(130, 10, 209);
+    transition: 0.4s ease-in-out;
+    align-items: flex-end;
+}
+.checkout_button:hover
+{
+border-color: #000;
+}

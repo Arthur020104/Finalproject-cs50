@@ -4,16 +4,21 @@
 
     <h1>Cart</h1>
     <ol>
+        {% set total = namespace(value=0) %}
         {% for produto in produtos %}
         <li>{{ produto.product_name}}<br>
+        {{"Quantity"}}
         <form action="/cart" method="post">
         <input name="id" type="hidden" value="{{ produto.product_id }}">
-        <p>{{"Quantity"}}<input {{"id="~produto.product_id}} type="number" autocomplete="off" name="quantity" {{"value="~produto.product_quantity}}>
-        <button class="buttonhide navbarb" {{"onclick=click(id,"~produto.product_id}} type="submit">Change Quantity</button></p>
+        <input {{"id="~produto.product_id}} type="number" autocomplete="off" name="quantity" {{"value="~produto.product_quantity}}>
+        <button class="buttonhide navbarb" {{"onclick=click(id,"~produto.product_id}} type="submit">Change Quantity</button>
         </form>
+        {{produto.total_payment}}
         </li>
+        {% set total.value = total.value+produto.total_payment|float %}
         {% endfor %}
-        <button>Finish Purcharge</button>
+        <p>{{"Total Payment: $"~total.value}}</p>
+        <button class="checkout_button">Finish Purcharge</button>
     </ol>
 
 {% endblock %}
