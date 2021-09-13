@@ -16,3 +16,11 @@ function sethidden(element)
 {
     element.style.visibility = 'hidden';
 }
+function onclick(id, product)
+{
+    if (id == "less")
+    {
+        int(produto) = document.querySelector("#"+product).value;
+        document.querySelector("#"+product).innerHTML = produto++;
+    }
+}

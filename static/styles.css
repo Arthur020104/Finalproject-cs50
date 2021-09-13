@@ -2,6 +2,7 @@
 {
     padding: 0em;
     background-color: black;
+    color:#fff;
 }
 .section
 {
@@ -108,7 +109,7 @@ p
     visibility: visible!important;
     background-color: rgb(130, 10, 209);
 }
-input[type="text"], input[type="password"], input[type="email"]
+input[type="text"], input[type="password"], input[type="email"], input[type=number]
 {
     align-items: center;
     background-color: #343a40!important;
@@ -117,7 +118,7 @@ input[type="text"], input[type="password"], input[type="email"]
     border: 1px transparent;
     border-radius: 0.25rem;
 }
-input[type="text"], input[type="password"], input[type="email"]:hover
+input[type="text"], input[type="password"], input[type="email"], input[type=number]:hover
 {
     border: 2px solid;
     border-color: #50585f;

@@ -5,7 +5,13 @@
     <h1>Cart</h1>
     <ol>
         {% for produto in produtos %}
-        <li>{{ produto.name }}</li>
+        <li>{{ produto.product_name}}<br>
+        <form action="/cart" method="post">
+        <input name="id" type="hidden" value="{{ produto.product_id }}">
+        <p>{{"Quantity"}}<input {{"id="~produto.product_id}} type="number" autocomplete="off" name="quantity" {{"value="~produto.product_quantity}}>
+        <button class="buttonhide navbarb" {{"onclick=click(id,"~produto.product_id}} type="submit">Change Quantity</button></p>
+        </form>
+        </li>
         {% endfor %}
         <button>Finish Purcharge</button>
     </ol>
