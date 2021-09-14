@@ -13,7 +13,6 @@
         <input {{"id="~produto.product_id}} type="number" autocomplete="off" name="quantity" {{"value="~produto.product_quantity}}>
         <button class="buttonhide navbarb" {{"onclick=click(id,"~produto.product_id}} type="submit">Change Quantity</button>
         </form>
-        {{produto.total_payment}}
         </li>
         {% set total.value = total.value+produto.total_payment|float %}
         {% endfor %}

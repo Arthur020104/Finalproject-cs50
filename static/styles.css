@@ -4,17 +4,37 @@
     background-color: black;
     color:#fff;
 }
-.section
+@media (min-width:1100px)
 {
-    float:left;
-    width: 15rem;
-    padding-bottom: 0px;
-    border-width: 0.20rem;
-    border-color: #000;
-    border-style: solid;
-    border-radius:20px;
-    background-color: #2b3035;
+    .section
+    {
+        float:left;
+        width: 15rem;
+        padding-bottom: 0px;
+        border-width: 0.20rem;
+        border-color: #000;
+        border-style: solid;
+        border-radius:20px;
+        background-color: #2b3035;
+    }
 }
+@media (max-width:1099px)
+{
+    .section
+    {
+        left: 50%; 
+        transform: translateX(-50%); 
+        position:sticky;
+        width: 15rem;
+        padding-bottom: 0px;
+        border-width: 0.20rem;
+        border-color: #000;
+        border-style: solid;
+        border-radius:20px;
+        background-color: #2b3035;
+    }
+}
+
 
 img
 {
@@ -168,5 +188,5 @@ input[type="text"], input[type="password"], input[type="email"], input[type=numb
 }
 .checkout_button:hover
 {
-border-color: #000;
+    border-color: #000;
 }

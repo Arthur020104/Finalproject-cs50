@@ -41,11 +41,15 @@ def after_request(response):
     return response
 
 
-
-
-@app.route('/')
+@app.route('/',methods=["GET","POST"])
 def index():
-    produ = db.execute("SELECT * FROM produtos ORDER BY about")
+    if request.method=="POST":
+        search = f'%{request.form.get("search")}%'
+        produ = db.execute("SELECT * FROM produtos WHERE name LIKE ? ORDER BY length(about) DESC",search )
+        if produ == []:
+            return render_template("error.html",problem="We don't have this product", log=session.get("user_id"))
+        return render_template("index.html",produ=produ, log=session.get("user_id"))
+    produ = db.execute("SELECT * FROM produtos ORDER BY length(about) DESC")
     return render_template("index.html",produ=produ, log=session.get("user_id"))
 
 @app.route("/login",methods=["GET","POST"])
@@ -53,17 +57,17 @@ def login():
     if request.method == "POST":
         # Remember that user logged in
         if not request.form.get("username"):
-            return render_template("error.html",problem="must provide username")
+            return render_template("error.html",problem="must provide username", log=session.get("user_id"))
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return render_template("error.html",problem="must provide password")
+            return render_template("error.html",problem="must provide password", log=session.get("user_id"))
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
         # Ensure username exists and password is correct
         if not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return render_template("error.html",problem="invalid username and/or password")
+            return render_template("error.html",problem="invalid username and/or password", log=session.get("user_id"))
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -73,7 +77,7 @@ def login():
         # Redirect to another page
         return redirect('/')
     else:
-        return render_template("login.html")
+        return render_template("login.html", log=session.get("user_id"))
 
 @app.route("/logout")
 @login_required
@@ -91,32 +95,32 @@ def register():
     if request.method == "POST":
         # Making sure the user provid useful information
         if not request.form.get("username"):
-            return render_template("error.html",problem="Must provide valid username")
+            return render_template("error.html",problem="Must provide valid username", log=session.get("user_id"))
 
         if not request.form.get("password"):
-            return render_template("error.html",problem="Must provide valid password")
+            return render_template("error.html",problem="Must provide valid password", log=session.get("user_id"))
 
         if not request.form.get("passwordconf"):
-            return render_template("error.html",problem="Must provide valid confirmation password")
+            return render_template("error.html",problem="Must provide valid confirmation password", log=session.get("user_id"))
         
         if not request.form.get("email"):
-            return render_template("error.html",problem="Must provide valid email")
+            return render_template("error.html",problem="Must provide valid email", log=session.get("user_id"))
 
         if request.form.get("password")!=request.form.get("passwordconf"):
-            return render_template("error.html",problem="The password and confirmation password must be iqual")
+            return render_template("error.html",problem="The password and confirmation password must be iqual", log=session.get("user_id"))
 
         if db.execute("SELECT * FROM users WHERE username = ?",request.form.get("username")) != []:
-            return render_template("error.html",problem="Username already in use")
+            return render_template("error.html",problem="Username already in use", log=session.get("user_id"))
         
         if db.execute("SELECT * FROM users WHERE email = ?",request.form.get("email")) != []:
-            return render_template("error.html",problem="Email already in use")
+            return render_template("error.html",problem="Email already in use", log=session.get("user_id"))
         else:
             db.execute("INSERT INTO users(username, hash, email) VALUES(?, ?, ?)",request.form.get("username"),generate_password_hash(request.form.get("password")), request.form.get("email"))
             message = Message("You are registered!", recipients=[request.form.get("email")])
             mail.send(message)
             return redirect("/login")
     else:
-        return render_template("register.html")
+        return render_template("register.html", log=session.get("user_id"))
 
 
 @app.route("/cart", methods=["GET", "POST"])
@@ -126,7 +130,7 @@ def cart():
         user_id = session.get("user_id")
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ?", user_id)
         total = None
-        return render_template("cart.html", produtos=produtos)
+        return render_template("cart.html", produtos=produtos, log=session.get("user_id"))
     
     if request.method == "POST":
         user_id = session.get("user_id")
@@ -152,11 +156,27 @@ def cart():
             db.execute("INSERT INTO checkoutproduct(user_id, product_id, product_name, product_price, total_payment) VALUES(?, ?, ?, ?, ?)", user_id, id, product[0]["name"], product[0]["price"], product[0]["price"])
             return redirect("/cart")
 
+@app.route("/product", methods=["GET", "POST"])
+@login_required
+def addproduct():
+    if request.method == "GET":
+        return render_template("productadd.html", log=session.get("user_id"))
+        
+    if request.method == "POST":
+        name = request.form.get("product_name")
+        about = request.form.get("about")
+        image = request.form.get("img")
+        price = request.form.get("price")
+        db.execute("INSERT INTO produtos(name, about, picture, price) VALUES(?, ?, ?, ?)",name, about, image, price)
+        email = db.execute('SELECT email FROM users WHERE id = ?',session.get("user_id"))
+        message = Message(f"You just register a new product with the name:{name}", recipients=[email[0]['email']])
+        mail.send(message)
+        return redirect("/")
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
-    return render_template("error.html",problem=f"{e.name}, {e.code}")
+    return render_template("error.html",problem=f"{e.name}, {e.code}", log=session.get("user_id"))
 
 # Listen for errors
 #@for code in default_exceptions:

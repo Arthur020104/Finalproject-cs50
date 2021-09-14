@@ -28,11 +28,26 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Finish purchase</a>
         </li>
+        {% if log%}
+        <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/register">Register</a>
+        </li>
+      {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="/product">Add Product</a>
+      </li>
         {% block nav%}{% endblock %}
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-        <button class="buttonhide navbarb" type="submit">Search</button>
+      <form class="form-inline my-2 my-lg-0" method="post" action="/">
+        <input autocomplete="off" class="form-control mr-sm-2" name="search" type="text" placeholder="Search">
+        <button class="buttonhide navbarb" type="submit">Search product</button>
       </form>
     </div>
 </nav>
