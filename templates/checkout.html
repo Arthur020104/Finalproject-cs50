@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}
+    Checkout
+{% endblock %}
+{% block main %}
+{% if produtos %}
+    <ul>
+        {% set total = namespace(value=0) %}
+        {% for produto in produtos %}
+        <li>
+            {{produto.product_quantity}}-{{ produto.product_name}}
+        </li>
+        {% set total.value = total.value+produto.total_payment|float %}
+        {% endfor %}
+    </ul>
+    <div class="section_checkout">
+        <form action="/checkout" method="post">
+        <button style="margin: -0.27rem;  position:relative; top:50%; float:right; background-color: rgb(130, 10, 209); color: #000; " class="checkout_button">Finish Purcharge</button>
+        </form>
+        <p style="text-align:left; margin-inline-start: auto;">{{"Total Payment: $"~total.value}}</p>
+    </div>
+{% elif request.method == "POST" and not produtos %}
+<div>
+    <h1>
+        You just finished the purchase
+    </h1>
+    <p>A email with more details has been sended to you.</p>
+</div>
+{% else %}
+<div>
+    <h2>
+        You don't have any product in your Cart
+    </h2>
+</div>
+{% endif %}
+{% endblock %}

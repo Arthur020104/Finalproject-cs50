@@ -129,7 +129,6 @@ def cart():
     if request.method == "GET":
         user_id = session.get("user_id")
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ?", user_id)
-        total = None
         return render_template("cart.html", produtos=produtos, log=session.get("user_id"))
     
     if request.method == "POST":
@@ -172,14 +171,36 @@ def addproduct():
         message = Message(f"You just register a new product with the name:{name}", recipients=[email[0]['email']])
         mail.send(message)
         return redirect("/")
+
+@app.route("/checkout", methods=["GET", "POST"])
+@login_required
+def checkout():
+    if request.method == "GET":
+        produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
+        return render_template("checkout.html",produtos=produtos)
+    elif request.method == "POST":
+        produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
+        db.execute("DELETE FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
+        email = db.execute('SELECT email FROM users WHERE id = ?',session.get("user_id"))
+        message = f"You just bought {len(produtos)} products with the names"
+        product_totalprice = 0
+        for product in produtos:
+            product_totalprice = product_totalprice+product["total_payment"]
+            message =f"{message}, {product['product_name']}"
+        message =f"{message}."
+        mensagem  =Message(f"{message} The total price paid was ${product_totalprice}", recipients=[email[0]['email']])
+        mail.send(mensagem)
+        return render_template("checkout.html")
+
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
     return render_template("error.html",problem=f"{e.name}, {e.code}", log=session.get("user_id"))
 
-# Listen for errors
-#@for code in default_exceptions:
 
 if __name__ == "__main__":
     app.run()
+ #Listen for errors
+#@for code in default_exceptions:

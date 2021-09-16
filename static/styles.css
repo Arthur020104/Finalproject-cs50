@@ -190,3 +190,15 @@ input[type="text"], input[type="password"], input[type="email"], input[type=numb
 {
     border-color: #000;
 }
+.section_checkout
+    {
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+        width: 100%;
+        padding-bottom: 0px;
+        border-width: 0.20rem;
+        border-color: #000;
+        border-style: solid;
+        border-radius:10px;
+        background-color: #2b3035;
+    }

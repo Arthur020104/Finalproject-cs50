@@ -13,7 +13,7 @@
     <div class="section_text">
      <h4 {{"id="~produtos.id~"h4"}}>{{produtos.name}}</h4>
      <p {{"id="~produtos.id~"p"}}>{{"Price: $"~produtos.price}}<br>{{produtos.about}}</p>
-     <form action="/cart" method="POST">
+     <form target="blank" action="/cart" method="POST">
         <input name="id" type="hidden" value="{{ produtos.id }}">
         <button type="submit" class="buttonhide" {{"id="~produtos.id~"m-o"}}>Add to Cart</button>
     </form>
