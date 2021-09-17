@@ -146,7 +146,7 @@ def cart():
                 quantity = quantity+1
                 db.execute("UPDATE checkoutproduct SET product_quantity = ? WHERE user_id = ? AND product_id = ?",quantity, user_id, id)
                 db.execute("UPDATE checkoutproduct SET total_payment = ? WHERE product_quantity = ? AND user_id = ? AND product_id = ?", (float(quantity)*float(product[0]['price'])), quantity, user_id, id)
-                return redirect("/cart")
+                return redirect("/")
             db.execute("UPDATE checkoutproduct SET product_quantity = ? WHERE user_id = ? AND product_id = ?",quantity, user_id, id)
             db.execute("UPDATE checkoutproduct SET total_payment = ? WHERE product_quantity = ? AND user_id = ? AND product_id = ?", (float(quantity)*float(product[0]['price'])), quantity, user_id, id)
             return redirect("/cart")
@@ -182,13 +182,13 @@ def checkout():
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
         db.execute("DELETE FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
         email = db.execute('SELECT email FROM users WHERE id = ?',session.get("user_id"))
-        message = f"You just bought {len(produtos)} products with the names"
+        message = f"You just bought {len(produtos)} products"
         product_totalprice = 0
         for product in produtos:
             product_totalprice = product_totalprice+product["total_payment"]
             message =f"{message}, {product['product_name']}"
-        message =f"{message}."
-        mensagem  =Message(f"{message} The total price paid was ${product_totalprice}", recipients=[email[0]['email']])
+        message = f"{message}. The total price paid was ${product_totalprice}"
+        mensagem  = Message(recipients=[email[0]['email']], body=message, subject="You just finish a purchase in Shop50.")
         mail.send(mensagem)
         return render_template("checkout.html")
 
@@ -202,5 +202,5 @@ def errorhandler(e):
 
 if __name__ == "__main__":
     app.run()
- #Listen for errors
+  #Listen for errors
 #@for code in default_exceptions:
