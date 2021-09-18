@@ -166,6 +166,8 @@ def addproduct():
         about = request.form.get("about")
         image = request.form.get("img")
         price = request.form.get("price")
+        if not name or not about or not image or not price:
+            return render_template("error.html",problem="You forgot to add a required info about the product.", log=session.get("user_id"))
         db.execute("INSERT INTO produtos(name, about, picture, price) VALUES(?, ?, ?, ?)",name, about, image, price)
         email = db.execute('SELECT email FROM users WHERE id = ?',session.get("user_id"))
         message = Message(f"You just register a new product with the name:{name}", recipients=[email[0]['email']])
@@ -190,7 +192,7 @@ def checkout():
         message = f"{message}. The total price paid was ${product_totalprice}"
         mensagem  = Message(recipients=[email[0]['email']], body=message, subject="You just finish a purchase in Shop50.")
         mail.send(mensagem)
-        return render_template("checkout.html")
+        return render_template("checkout.html", log=session.get("user_id"))
 
 
 def errorhandler(e):
