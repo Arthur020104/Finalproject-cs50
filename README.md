@@ -6,7 +6,7 @@ The is the login page.<img align="center" src="https://github.com/Arthur020104/F
 
 This is the index page.<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_4.png?raw=true">
 
-When the navbar button is clicked, itself expands and you get the option to navigate all the pages in the site.<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_5.png?raw=true">
+When the navbar button is clicked, expands itself and you get the option to navigate all the pages in the site.<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_5.png?raw=true">
 
 Search:<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_6.png?raw=true">
 
