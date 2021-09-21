@@ -143,7 +143,7 @@ def cart():
             if quantity == None:
                 unupdate_product = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ? AND product_id = ?",user_id, id)
                 quantity = unupdate_product[0]['product_quantity']
-                quantity = quantity+1
+                quantity += 1
                 db.execute("UPDATE checkoutproduct SET product_quantity = ? WHERE user_id = ? AND product_id = ?",quantity, user_id, id)
                 db.execute("UPDATE checkoutproduct SET total_payment = ? WHERE product_quantity = ? AND user_id = ? AND product_id = ?", (float(quantity)*float(product[0]['price'])), quantity, user_id, id)
                 return redirect("/")
@@ -188,8 +188,8 @@ def checkout():
         product_totalprice = 0
         for product in produtos:
             product_totalprice = product_totalprice+product["total_payment"]
-            message =f"{message}, {product['product_name']}"
-        message = f"{message}. The total price paid was ${product_totalprice}"
+            message +=f", {product['product_name']}"
+        message += f". The total price paid was ${product_totalprice}"
         mensagem  = Message(recipients=[email[0]['email']], body=message, subject="You just finish a purchase in Shop50.")
         mail.send(mensagem)
         return render_template("checkout.html", log=session.get("user_id"))
@@ -204,5 +204,3 @@ def errorhandler(e):
 
 if __name__ == "__main__":
     app.run()
-  #Listen for errors
-#@for code in default_exceptions:
