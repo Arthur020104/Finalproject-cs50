@@ -102,7 +102,7 @@ def register():
 
         if not request.form.get("passwordconf"):
             return render_template("error.html",problem="Must provide valid confirmation password", log=session.get("user_id"))
-        
+
         if not request.form.get("email"):
             return render_template("error.html",problem="Must provide valid email", log=session.get("user_id"))
 
@@ -111,7 +111,7 @@ def register():
 
         if db.execute("SELECT * FROM users WHERE username = ?",request.form.get("username")) != []:
             return render_template("error.html",problem="Username already in use", log=session.get("user_id"))
-        
+
         if db.execute("SELECT * FROM users WHERE email = ?",request.form.get("email")) != []:
             return render_template("error.html",problem="Email already in use", log=session.get("user_id"))
         else:
@@ -130,7 +130,7 @@ def cart():
         user_id = session.get("user_id")
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id = ?", user_id)
         return render_template("cart.html", produtos=produtos, log=session.get("user_id"))
-    
+
     if request.method == "POST":
         user_id = session.get("user_id")
         id = request.form.get("id")
@@ -160,7 +160,7 @@ def cart():
 def addproduct():
     if request.method == "GET":
         return render_template("productadd.html", log=session.get("user_id"))
-        
+
     if request.method == "POST":
         name = request.form.get("product_name")
         about = request.form.get("about")
@@ -184,11 +184,15 @@ def checkout():
         produtos = db.execute("SELECT * FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
         db.execute("DELETE FROM checkoutproduct WHERE user_id=?",session.get("user_id"))
         email = db.execute('SELECT email FROM users WHERE id = ?',session.get("user_id"))
-        message = f"You just bought {len(produtos)} products"
+        product_quantity = 0
         product_totalprice = 0
+        for i in range(len(produtos)):
+            product_quantity += produtos[i]['product_quantity']
+            product_totalprice += produtos[i]["total_payment"]
+        message = f"You just bought {product_quantity} products"
         for product in produtos:
-            product_totalprice = product_totalprice+product["total_payment"]
-            message +=f", {product['product_name']}"
+            message +=f", {product['product_quantity']}-"
+            message +=f"{product['product_name']}"
         message += f". The total price paid was ${product_totalprice}"
         mensagem  = Message(recipients=[email[0]['email']], body=message, subject="You just finish a purchase in Shop50.")
         mail.send(mensagem)
