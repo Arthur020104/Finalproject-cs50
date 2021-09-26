@@ -49,7 +49,7 @@ def index():
         if produ == []:
             return render_template("error.html",problem="We don't have this product", log=session.get("user_id"))
         return render_template("index.html",produ=produ, log=session.get("user_id"))
-    produ = db.execute("SELECT * FROM produtos ORDER BY length(about) DESC")
+    produ = db.execute("SELECT * FROM produtos ORDER BY length(about) ASC")
     return render_template("index.html",produ=produ, log=session.get("user_id"))
 
 @app.route("/login",methods=["GET","POST"])
