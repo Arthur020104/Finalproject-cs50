@@ -40,7 +40,8 @@ app.secret_key = os.environ['SECRET']
 app.config['SESSION_TYPE'] = os.environ['SESSION_TYPE']
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = redis.from_url('127.0.0.1:6379')
+redisconf = "redis://store50.herokuapp.com/"
+app.config['SESSION_REDIS'] = redis.from_url("redis://store50.herokuapp.com/")
 
 @app.after_request
 def after_request(response):
