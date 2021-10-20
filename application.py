@@ -7,6 +7,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from cs50 import SQL
 from help import login_required
 from tempfile import mkdtemp
+import redis
 
 
 #config application
@@ -14,11 +15,12 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-# Configure session to use filesystem (instead of signed cookies)
+""" Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+"""
 # Config SQLite database
 db = SQL("sqlite:///store.db")
 
@@ -32,6 +34,13 @@ app.config["MAIL_USERNAME"] = os.environ["MAIL_USERNAME"]
 app.config["MAIL_USE_SSL"] = True
 
 mail = Mail(app)
+
+# Configure Redis for storing the session data on the server-side
+app.secret_key = os.environ['SECRET']
+app.config['SESSION_TYPE'] = os.environ['SESSION_TYPE']
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_REDIS'] = redis.from_url('127.0.0.1:6379')
 
 @app.after_request
 def after_request(response):

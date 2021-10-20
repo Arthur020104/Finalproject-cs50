@@ -3,4 +3,5 @@ Flask
 flask_session
 requests
 flask_mail
+redis
 gunicorn
