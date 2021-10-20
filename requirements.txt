@@ -4,3 +4,4 @@ flask_session
 requests
 flask_mail
 gunicorn
+os
