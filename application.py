@@ -7,7 +7,6 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from cs50 import SQL
 from help import login_required
 from tempfile import mkdtemp
-from boto.s3.connection import S3Connection
 
 
 #config application
