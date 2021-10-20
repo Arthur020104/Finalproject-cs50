@@ -66,16 +66,16 @@ def login():
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
         # Ensure username exists and password is correct
-        if not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return render_template("error.html",problem="invalid username and/or password", log=session.get("user_id"))
-
+        try:
+            if not check_password_hash(rows[0]["hash"], request.form.get("password")):
+                return render_template("error.html",problem="invalid username and/or password", log=session.get("user_id"))
+        except IndexError:
+             return render_template("error.html",problem="invalid username and/or password", log=session.get("user_id"))
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
         return redirect("/")
-        # Redirect to another page
-        return redirect('/')
     else:
         return render_template("login.html", log=session.get("user_id"))
 
