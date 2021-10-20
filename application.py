@@ -7,6 +7,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from cs50 import SQL
 from help import login_required
 from tempfile import mkdtemp
+from boto.s3.connection import S3Connection
 
 
 #config application
@@ -23,12 +24,12 @@ Session(app)
 db = SQL("sqlite:///store.db")
 
 #config to send emails
-app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
-app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = S3Connection(os.environ.get["MAIL_DEFAULT_SENDER"])
+app.config["MAIL_PASSWORD"] = S3Connection(os.environ.get["MAIL_PASSWORD"])
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_USE_TLS"] = False
-app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_USERNAME"] = S3Connection(os.environ.get["MAIL_USERNAME"])
 app.config["MAIL_USE_SSL"] = True
 
 mail = Mail(app)
