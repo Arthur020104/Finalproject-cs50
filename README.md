@@ -1,6 +1,6 @@
 Site link: https://store50.herokuapp.com/
 
-You can register by typing your email, username and twice a password. <img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_8.png?raw=true">
+You can register by typing your email, username and twice a password.<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_8.png?raw=true">
 
 When the register is finished, you will receive a email.<img align="center" src="https://github.com/Arthur020104/Finalproject-cs50/blob/master/Readme%20Images/Screenshot_2.png?raw=true">
 
