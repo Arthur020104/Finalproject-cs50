@@ -4,21 +4,31 @@
 {% endblock %}
 {% block body %}
 <p class="indentation"></p>
-<div class="container">
+
+
+<div class="container text-center">
+    <div class="container-fluid">
+        <div class="row">
+{% set count = namespace(value=0) %}
 {% for produtos in produ %}
-<div {{"id="~produtos.id}} class="section" onmouseout="mouseout(id)" onmouseover="mouseover(id)">
-    <div {{"id="~produtos.id~"d"}} class="section_img">
-        <img {{"id="~produtos.id~"img"}} {{"src="~produtos.picture}}>
+{% set count.value = count.value + 1 %}
+        <div class="col-lg-3 colimpar">
+            <div {{"id="~produtos.id}} class="" onmouseout="mouseout(id)" onmouseover="mouseover(id)">
+                <img {{"id="~produtos.id~"img"}} class="img-produtos" {{"src="~produtos.picture}}>
+                <h4 {{"id="~produtos.id~"h4"}}>{{produtos.name}}</h4>
+                <p {{"id="~produtos.id~"p"}}>{{"Price: $"~produtos.price}}<br>{{produtos.about}}</p>
+                <form target="blank" action="/cart" method="POST">
+                    <input name="id" type="hidden" value="{{ produtos.id }}">
+                    <button type="submit" class="buttonhide" {{"id="~produtos.id~"m-o"}}>Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    {%if count.value % 3 == 0%}
     </div>
-    <div class="section_text">
-     <h4 {{"id="~produtos.id~"h4"}}>{{produtos.name}}</h4>
-     <p {{"id="~produtos.id~"p"}}>{{"Price: $"~produtos.price}}<br>{{produtos.about}}</p>
-     <form target="blank" action="/cart" method="POST">
-        <input name="id" type="hidden" value="{{ produtos.id }}">
-        <button type="submit" class="buttonhide" {{"id="~produtos.id~"m-o"}}>Add to Cart</button>
-    </form>
-    </div>
-</div>
+    <div class="row">
+    {%endif%}
 {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

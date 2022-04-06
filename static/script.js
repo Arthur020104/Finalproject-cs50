@@ -10,11 +10,17 @@ function mouseout(id)
 }
 function setvisible(element) 
 {
+    element.style.animationName = 'show';
     element.style.visibility = 'visible';
+    element.style.animationPlayState = 'running';
 }
 function sethidden(element) 
 {
-    element.style.visibility = 'hidden';
+    element.style.animationName = 'hide';
+    element.style.animationPlayState = 'running';
+    element.addEventListener('animationend', () =>  {
+        element.style.visibility = 'hidden';
+      });
 }
 function onclick(id, product)
 {
