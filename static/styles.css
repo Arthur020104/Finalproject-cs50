@@ -138,7 +138,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type=numb
     width: 100%;
     padding-bottom: 0px;
     border-width: 0.20rem;
-    border-color: #bbb;
+    border-color: #bbb!important;
     border: 2px solid;
     border-radius:5px;
     background-color: #eee;
@@ -235,10 +235,12 @@ input[type="text"], input[type="password"], input[type="email"], input[type=numb
 {
     color: #fff!important;
     border-color: #fff!important;
-    font-weight: 700;
+    font-weight: 500;
     visibility: visible!important;
 }
 .cart:hover
 {
     background-color: #fff!important;
+    color: rgb(130, 10, 209)!important;
+    border-color: rgb(130, 10, 209)!important;
 }
